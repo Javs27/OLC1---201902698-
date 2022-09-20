@@ -1,0 +1,1740 @@
+package codigo;
+
+import java_cup.runtime.Symbol;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol s){
+        System.out.println("Error encontrado");
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+    }
+    // para guardar todo lo que se traduce 
+    public String Python = "Codigo en python \n";
+    public int InicioEstado = 1;
+    
+    public static Nodo raiz;
+    // para retornar la raiz 
+    public Nodo getRaiz(){
+        return raiz;
+    }
+
+:};
+
+terminal Int, If, Else, While, Igual, Suma, Resta, Multiplicacion, OperadorLogico, Verdadero, Falso, InterrogacionA, InterrogacionC,
+    Division, ParentesisA, ParentesisC, LlaveA, LlaveC, Main,  PuntoComa, Coma, Identificador, Numero, Numeroo, Funcion, FinFuncion, ERROR,
+    inicioAnalisis, finAnalisis, Ingresar, Como, ConValor, Si, Entonces, FinSi, DeloContrario, Osi, Segun,
+    Hacer, FinSegun, Para, FinPara, ConIncremental, Mientras, FinMientras, Repetir, HastaQue, Hasta, Retornar, Metodo,
+    FinMetodo, ConParametros, Ejecutar, Imprimir, Potencia, Modulo, ImprimirSalto, Comilla, Car, GuionLow, CorcheteA,
+    Booleano,  OperadorOr, Cadena, TipoCadena, DosPuntos, Boolean, OperadorNot, Doble, CorcheteC,  Menor,  Mayor, OperadorAnd, Double,
+    IgualIgual, Asignar, String, MenorIgual, Char, Mod, Flotante, MayorIgual, Float,Caracter ,OperadorRelacional;
+non terminal INICIO, SENTENCIA, DECLARACION, ASIGNACION, CONDICIONALSI, CONDICION, SELECCIONMULTIPLE, CICLOPARA, CICLOMIENTRAS, CICLOREPETIR, METODO,
+    PARAMETROS, FUNCION, LLAMADAFUNMET, IMPRESION, RETORAR,ARITMETICA ;
+
+
+start with INICIO;
+
+// este es el inicio 
+INICIO ::= inicioAnalisis SENTENCIA:A finAnalisis
+// para el codigo
+{:
+            if (InicioEstado==1){
+            Python += A;System.out.println(Python);} 
+
+            if (InicioEstado==2){ parser.raiz = (Nodo) A; }
+             
+:}
+;   
+
+// para las declaraciones de variables
+SENTENCIA ::= 
+    DECLARACION:A
+    // codigo para traducir 
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A);} 
+    if (InicioEstado==2){
+    // Enviando declaracion y sentencia como string 
+    RESULT = A;} 
+      
+           
+    :}
+    | 
+        SENTENCIA:A  DECLARACION:B
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A)+String.valueOf(B);}
+             if (InicioEstado==2){
+            // Enviando declaracion y sentencia como string 
+            Nodo padre = new Nodo("SENTENCIA", "", 0,0);
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo((Nodo)B); 
+            RESULT = padre;
+        } 
+           
+    :}
+    | 
+    ASIGNACION:A
+    // codigo para traducir 
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A);} 
+    if (InicioEstado==2){
+    // Enviando declaracion y sentencia como string 
+    RESULT = A;} 
+      
+         
+    :}
+    | 
+        SENTENCIA:A  ASIGNACION:B 
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A)+String.valueOf(B);}
+             if (InicioEstado==2){
+            // Enviando declaracion y sentencia como string 
+            Nodo padre = new Nodo("SENTENCIA", "", 0,0);
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo((Nodo)B); 
+            RESULT = padre;
+        }    
+    :}
+    |
+    CONDICIONALSI:A
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A);} 
+    if (InicioEstado==2){
+    // Enviando declaracion y sentencia como string 
+    RESULT = A;} 
+      
+        
+    :}
+    |
+        SENTENCIA:A CONDICIONALSI:B 
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A)+String.valueOf(B);}
+             if (InicioEstado==2){
+            // Enviando declaracion y sentencia como string 
+            Nodo padre = new Nodo("SENTENCIA", "", 0,0);
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo((Nodo)B); 
+            RESULT = padre;
+        }    
+    :}
+    |
+    SELECCIONMULTIPLE:A
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A);} 
+    if (InicioEstado==2){
+    // Enviando declaracion y sentencia como string 
+    RESULT = A;} 
+      
+          
+    :}
+    |
+        SENTENCIA:A SELECCIONMULTIPLE:B 
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A)+String.valueOf(B);}
+             if (InicioEstado==2){
+            // Enviando declaracion y sentencia como string 
+            Nodo padre = new Nodo("SENTENCIA", "", 0,0);
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo((Nodo)B); 
+            RESULT = padre;
+        } 
+    :}
+    
+    |
+    CICLOPARA:A
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A);} 
+    if (InicioEstado==2){
+    // Enviando declaracion y sentencia como string 
+    RESULT = A;} 
+      
+         
+    :}
+    |
+        SENTENCIA:A CICLOPARA:B 
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A)+String.valueOf(B);}
+             if (InicioEstado==2){
+            // Enviando declaracion y sentencia como string 
+            Nodo padre = new Nodo("SENTENCIA", "", 0,0);
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo((Nodo)B); 
+            RESULT = padre;
+        }    
+    :} 
+    
+    |
+    CICLOMIENTRAS:A
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A);} 
+    if (InicioEstado==2){
+    // Enviando declaracion y sentencia como string 
+    RESULT = A;} 
+      
+         
+    :}
+    |
+        SENTENCIA:A CICLOMIENTRAS:B 
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A)+String.valueOf(B);}
+             if (InicioEstado==2){
+            // Enviando declaracion y sentencia como string 
+            Nodo padre = new Nodo("SENTENCIA", "", 0,0);
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo((Nodo)B); 
+            RESULT = padre;
+        }   
+    :}  
+    
+    |
+    CICLOREPETIR:A 
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A);} 
+    if (InicioEstado==2){
+    // Enviando declaracion y sentencia como string 
+    RESULT = A;} 
+      
+         
+    :} 
+    |
+        SENTENCIA:A CICLOREPETIR:B 
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A)+String.valueOf(B);}
+             if (InicioEstado==2){
+            // Enviando declaracion y sentencia como string 
+            Nodo padre = new Nodo("SENTENCIA", "", 0,0);
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo((Nodo)B); 
+            RESULT = padre;
+        }   
+    :}  
+    |
+    METODO:A
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A);} 
+    if (InicioEstado==2){
+    // Enviando declaracion y sentencia como string 
+    RESULT = A;} 
+      
+       
+    :}
+    |
+        SENTENCIA:A METODO:B 
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A)+String.valueOf(B);}
+             if (InicioEstado==2){
+            // Enviando declaracion y sentencia como string 
+            Nodo padre = new Nodo("SENTENCIA", "", 0,0);
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo((Nodo)B); 
+            RESULT = padre;
+        }    
+    :} 
+     |
+    FUNCION:A
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A);} 
+    if (InicioEstado==2){
+    // Enviando declaracion y sentencia como string 
+    RESULT = A;} 
+      
+         
+    :}
+    |
+        SENTENCIA:A FUNCION:B 
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A)+String.valueOf(B);}
+             if (InicioEstado==2){
+            // Enviando declaracion y sentencia como string 
+            Nodo padre = new Nodo("SENTENCIA", "", 0,0);
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo((Nodo)B); 
+            RESULT = padre;
+        }    
+    :} 
+    
+    |
+    LLAMADAFUNMET:A
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A);} 
+    if (InicioEstado==2){
+    // Enviando declaracion y sentencia como string 
+    RESULT = A;} 
+      
+       
+    :}
+    |
+        SENTENCIA:A  LLAMADAFUNMET:B 
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A)+String.valueOf(B);}
+             if (InicioEstado==2){
+            // Enviando declaracion y sentencia como string 
+            Nodo padre = new Nodo("SENTENCIA", "", 0,0);
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo((Nodo)B); 
+            RESULT = padre;
+        }     
+    :}  
+    |
+    IMPRESION:A
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A);} 
+    if (InicioEstado==2){
+    // Enviando declaracion y sentencia como string 
+    RESULT = A;} 
+      
+          
+    :}
+    | 
+        SENTENCIA:A IMPRESION:B 
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A)+String.valueOf(B);}
+             if (InicioEstado==2){
+            // Enviando declaracion y sentencia como string 
+            Nodo padre = new Nodo("SENTENCIA", "", 0,0);
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo((Nodo)B); 
+            RESULT = padre;
+        }    
+    :} 
+    |
+    RETORAR:A
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A);} 
+    if (InicioEstado==2){
+    // Enviando declaracion y sentencia como string 
+    RESULT = A;} 
+      
+          
+    :}
+    |
+        SENTENCIA:A RETORAR:B 
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A)+String.valueOf(B);}
+             if (InicioEstado==2){
+            // Enviando declaracion y sentencia como string 
+            Nodo padre = new Nodo("SENTENCIA", "", 0,0);
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo((Nodo)B); 
+            RESULT = padre;
+        }   
+    :} 
+    |
+    ARITMETICA:A
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A);} 
+    if (InicioEstado==2){
+    // Enviando declaracion y sentencia como string 
+    RESULT = A;} 
+      
+           
+    :}
+    |
+        SENTENCIA:A ARITMETICA:B 
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf(A)+String.valueOf(B);}
+             if (InicioEstado==2){
+            // Enviando declaracion y sentencia como string 
+            Nodo padre = new Nodo("SENTENCIA", "", 0,0);
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo((Nodo)B); 
+            RESULT = padre;
+        }  
+    :} 
+    
+;
+
+
+// para Declaracon y asignar valors a variables
+DECLARACION ::= Ingresar:X Identificador:Y Como:Z  Numeroo:W ConValor:R Numero:T PuntoComa:U 
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT =  String.valueOf(Y) + "=" + String.valueOf(T) + String.valueOf(U)+ "\n";}
+    
+
+// este es para el arbol 
+    if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("DECLARACION", "", 0,0);
+            padre.AddHijo(new Nodo("Ingresar",      (String)X, Xright, Xleft));
+            padre.AddHijo(new Nodo("Identificador", (String)Y, Yright, Yleft));
+            padre.AddHijo(new Nodo("Como",          (String)Z, Zright, Zleft));
+            padre.AddHijo(new Nodo("Numeroo",        (String)W, Wright, Wleft));
+            padre.AddHijo(new Nodo("ConValor",       (String)R, Rright, Rleft));
+            padre.AddHijo(new Nodo("Numero",         (String)T, Tright, Tleft));
+            padre.AddHijo(new Nodo("PuntoComa",      (String)U, Uright, Uleft));
+            RESULT = padre;}
+:}
+| 
+    Ingresar:X Identificador:Y  Como:Z TipoCadena:W ConValor:R Cadena:T PuntoComa:U 
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT =  String.valueOf(Y) + "=" + String.valueOf(T)+ "\n";} 
+                
+            // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("DECLARACION", "", 0,0);
+            padre.AddHijo(new Nodo("Ingresar",      (String)X, Xright, Xleft));
+            padre.AddHijo(new Nodo("Identificador", (String)Y, Yright, Yleft));
+            padre.AddHijo(new Nodo("Como",          (String)Z, Zright, Zleft));
+            padre.AddHijo(new Nodo("TipoCadena",     (String)W, Wright, Wleft));
+            padre.AddHijo(new Nodo("ConValor",       (String)R, Rright, Rleft));
+            padre.AddHijo(new Nodo("Cadena",         (String)T, Tright, Tleft));
+            padre.AddHijo(new Nodo("PuntoComa",      (String)U, Uright, Uleft));
+            RESULT = padre;}
+:}
+|
+    Ingresar:X Identificador:Y Como:Z Car:W ConValor:R Caracter:T PuntoComa:U 
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT =  String.valueOf(Y) + "=" + String.valueOf(T)+ "\n";}
+
+            // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("DECLARACION", "", 0,0);
+            padre.AddHijo(new Nodo("Ingresar",      (String)X, Xright, Xleft));
+            padre.AddHijo(new Nodo("Identificador", (String)Y, Yright, Yleft));
+            padre.AddHijo(new Nodo("Como",          (String)Z, Zright, Zleft));
+            padre.AddHijo(new Nodo("Car",             (String)W, Wright, Wleft));
+            padre.AddHijo(new Nodo("ConValor",       (String)R, Rright, Rleft));
+            padre.AddHijo(new Nodo("Caracter",         (String)T, Tright, Tleft));
+            padre.AddHijo(new Nodo("PuntoComa",      (String)U, Uright, Uleft));
+            RESULT = padre;}
+            
+:}
+|
+    Ingresar:X Identificador:Y Como:Z  Boolean:W ConValor:R  Verdadero:T PuntoComa:U  
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT =  String.valueOf(Y) + "=" + String.valueOf(T)+ "\n";} 
+            
+            // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("DECLARACION", "", 0,0);
+            padre.AddHijo(new Nodo("Ingresar",      (String)X, Xright, Xleft));
+            padre.AddHijo(new Nodo("Identificador", (String)Y, Yright, Yleft));
+            padre.AddHijo(new Nodo("Como",          (String)Z, Zright, Zleft));
+            padre.AddHijo(new Nodo("Boolean",     (String)W, Wright, Wleft));
+            padre.AddHijo(new Nodo("ConValor",       (String)R, Rright, Rleft));
+            padre.AddHijo(new Nodo("Verdadero",         (String)T, Tright, Tleft));
+            padre.AddHijo(new Nodo("PuntoComa",      (String)U, Uright, Uleft));
+            RESULT = padre;}
+:}
+|  
+    Ingresar:X  Identificador:Y Como:Z Boolean:W ConValor:R Falso:T  PuntoComa:U
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT =  String.valueOf(Y) + "=" + String.valueOf(T)+ "\n";}  
+
+// para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("DECLARACION", "", 0,0);
+            padre.AddHijo(new Nodo("Ingresar",      (String)X, Xright, Xleft));
+            padre.AddHijo(new Nodo("Identificador", (String)Y, Yright, Yleft));
+            padre.AddHijo(new Nodo("Como",          (String)Z, Zright, Zleft));
+            padre.AddHijo(new Nodo("Boolean",     (String)W, Wright, Wleft));
+            padre.AddHijo(new Nodo("ConValor",       (String)R, Rright, Rleft));
+            padre.AddHijo(new Nodo("Falso",         (String)T, Tright, Tleft));
+            padre.AddHijo(new Nodo("PuntoComa",      (String)U, Uright, Uleft));
+            RESULT = padre;} 
+:}  
+
+  
+;
+
+// para las asignaciones
+ASIGNACION ::= Identificador:A Asignar:E Numero:I PuntoComa:O 
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT =  String.valueOf(A) + "=" + String.valueOf(I)+ String.valueOf(O)+ "\n";} 
+            
+
+        // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("ASIGNACION", "", 0,0);
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("Asignar",       (String)E, Eright, Eleft));
+            padre.AddHijo(new Nodo("Numero",          (String)I, Iright, Ileft));
+            padre.AddHijo(new Nodo("PuntoComa",     (String)O, Oright, Oleft));
+            RESULT = padre;}
+            
+:}  
+| 
+    Identificador:A  Asignar:E Cadena:I PuntoComa:O  
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT =  String.valueOf(A) + "=" + String.valueOf(I)+ String.valueOf(O)+ "\n";}
+
+            // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("ASIGNACION", "", 0,0);
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("Asignar",       (String)E, Eright, Eleft));
+            padre.AddHijo(new Nodo("Cadena",          (String)I, Iright, Ileft));
+            padre.AddHijo(new Nodo("PuntoComa",     (String)O, Oright, Oleft));
+            RESULT = padre;}
+            
+:}  
+| 
+    Identificador:A  Asignar:E Caracter:I PuntoComa:O   
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT =  String.valueOf(A) + "=" + String.valueOf(I)+ String.valueOf(O)+ "\n";}  
+            // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("ASIGNACION", "", 0,0);
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("Asignar",       (String)E, Eright, Eleft));
+            padre.AddHijo(new Nodo("Caracter",          (String)I, Iright, Ileft));
+            padre.AddHijo(new Nodo("PuntoComa",     (String)O, Oright, Oleft));
+            RESULT = padre;}
+:} 
+|
+    Identificador:A  Asignar:E Verdadero:I PuntoComa:O 
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT =  String.valueOf(A) + "=" + String.valueOf(I)+ String.valueOf(O)+ "\n";}  
+              // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("ASIGNACION", "", 0,0);
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("Asignar",       (String)E, Eright, Eleft));
+            padre.AddHijo(new Nodo("Veradero",          (String)I, Iright, Ileft));
+            padre.AddHijo(new Nodo("PuntoComa",     (String)O, Oright, Oleft));
+            RESULT = padre;}
+:} 
+|
+    Identificador:A  Asignar:E Falso:I PuntoComa:O  
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT =  String.valueOf(A) + "=" + String.valueOf(I)+ String.valueOf(O)+ "\n";}  
+              // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("ASIGNACION", "", 0,0);
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("Asignar",       (String)E, Eright, Eleft));
+            padre.AddHijo(new Nodo("Falso",          (String)I, Iright, Ileft));
+            padre.AddHijo(new Nodo("PuntoComa",     (String)O, Oright, Oleft));
+            RESULT = padre;}
+:} 
+|
+    Identificador:A Asignar:E   Identificador:I PuntoComa:O  
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT =  String.valueOf(A) + "=" + String.valueOf(I)+ String.valueOf(O)+  "\n";} 
+              // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("ASIGNACION", "", 0,0);
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("Asignar",       (String)E, Eright, Eleft));
+            padre.AddHijo(new Nodo("Identificador",          (String)I, Iright, Ileft));
+            padre.AddHijo(new Nodo("PuntoComa",     (String)O, Oright, Oleft));
+            RESULT = padre;}
+:} 
+|
+    Numero:A Asignar:E  Numero:I PuntoComa:O 
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT =  String.valueOf(A) + "=" + String.valueOf(I)+ String.valueOf(O)+ "\n";}  
+            
+              // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("ASIGNACION", "", 0,0);
+            padre.AddHijo(new Nodo("Numero",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("Asignar",       (String)E, Eright, Eleft));
+            padre.AddHijo(new Nodo("Numero",          (String)I, Iright, Ileft));
+            padre.AddHijo(new Nodo("PuntoComa",     (String)O, Oright, Oleft));
+            RESULT = padre;}
+            
+:} 
+|
+    error PuntoComa
+;
+
+//CONDICIONAL SI  
+CONDICIONALSI ::= Si:A CONDICION:B Entonces:C SENTENCIA:D FinSi:E 
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf(" if ") + String.valueOf(" " +B +" ")+ String.valueOf(D)+ "\n";}
+        
+            // PARA EL ARBOL
+         if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("CONDICIONALSI", "", 0,0);
+            padre.AddHijo(new Nodo("SI",            (String)A, Aright, Aleft));
+            padre.AddHijo((Nodo)B);
+            padre.AddHijo(new Nodo("Entonces",      (String)C, Cright, Cleft));
+            padre.AddHijo((Nodo)D);
+            padre.AddHijo(new Nodo("FinSi",         (String)E, Eright, Eleft));
+            RESULT = padre;} 
+    :}     
+|
+    // CONDICIONAL DELOCONTARIO
+    Si:A CONDICION:B Entonces:C SENTENCIA:D  DeloContrario:E  SENTENCIA:F FinSi:G 
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf(" if ") + String.valueOf(B)+ String.valueOf(D) + String.valueOf(" else ")+ String.valueOf(F)+ String.valueOf(G)+"\n";}   
+          // PARA EL ARBOL
+         if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("CONDICIONALSI", "", 0,0);
+            padre.AddHijo(new Nodo("SI",            (String)A, Aright, Aleft));
+            padre.AddHijo((Nodo)B);
+            padre.AddHijo(new Nodo("Entonces",      (String)C, Cright, Cleft));
+            padre.AddHijo((Nodo)D);
+            padre.AddHijo(new Nodo("DeloContrario",         (String)E, Eright, Eleft));
+            padre.AddHijo((Nodo)F);
+            padre.AddHijo(new Nodo("FinSi",         (String)G, Gright, Gleft));
+            RESULT = padre;} 
+    
+    :} 
+|
+    // CONDICIONAL OSI 
+    Si:A CONDICION:B Entonces:C SENTENCIA:D Osi:E  CONDICION:F  Entonces:G SENTENCIA:H DeloContrario:I SENTENCIA:J FinSi:K 
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf(" if ") + String.valueOf(B)+ String.valueOf(D) + String.valueOf(" elif ")+  String.valueOf(F)+ 
+                    String.valueOf(H)+  String.valueOf(" else ") + String.valueOf(J)+"\n";}  
+                     // PARA EL ARBOL
+         if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("CONDICIONALSI", "", 0,0);
+            padre.AddHijo(new Nodo("SI",                (String)A, Aright, Aleft));
+            padre.AddHijo((Nodo)B);
+            padre.AddHijo(new Nodo("Entonces",          (String)C, Cright, Cleft));
+            padre.AddHijo((Nodo)D);
+            padre.AddHijo(new Nodo("Osi",               (String)E, Eright, Eleft));
+            padre.AddHijo((Nodo)F);
+            padre.AddHijo(new Nodo("Entonces",         (String)G, Gright, Gleft));
+            padre.AddHijo((Nodo)H);
+            padre.AddHijo(new Nodo("DeLoContrario",         (String)I, Iright, Ileft));
+            padre.AddHijo((Nodo)J);
+            padre.AddHijo(new Nodo("FinSi",                 (String)K, Kright, Kleft));
+            RESULT = padre;} 
+    :} 
+|
+    // CONDICION OSI OSI DELOOCONTRARIO 
+    Si:A CONDICION:B Entonces:C SENTENCIA:D  Osi:E CONDICION:F Entonces:G SENTENCIA:H Osi:I CONDICION:J  Entonces:K
+    SENTENCIA:L DeloContrario:M SENTENCIA:N  FinSi:O
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf(" if ") + String.valueOf(B)+ String.valueOf(D) + String.valueOf(" elif ")+  String.valueOf(F)+ 
+                    String.valueOf(H)+ String.valueOf(" elif ") +  String.valueOf(L)+ String.valueOf(N) + "\n";}   
+        if (InicioEstado==2){
+            // RAIZ no SALE EL OSI OSI OSI
+            Nodo padre = new Nodo("CONDICIONALSI", "", 0,0);
+            padre.AddHijo(new Nodo("SI",                    (String)A, Aright, Aleft));
+            padre.AddHijo((Nodo)B);
+            padre.AddHijo(new Nodo("Entonces",              (String)C, Cright, Cleft));
+            padre.AddHijo((Nodo)D);
+            padre.AddHijo(new Nodo("Osi",                   (String)E, Eright, Eleft));
+            padre.AddHijo((Nodo)F);
+            padre.AddHijo(new Nodo("Entonces",              (String)G, Gright, Gleft));
+            padre.AddHijo((Nodo)H);
+            padre.AddHijo(new Nodo("Osi",                   (String)I, Iright, Ileft));
+            padre.AddHijo((Nodo)J);
+            padre.AddHijo(new Nodo("Entonces",              (String)K, Kright, Kleft));
+            padre.AddHijo((Nodo)L);
+            padre.AddHijo(new Nodo("DeLoContrario",         (String)M, Mright, Mleft));
+            padre.AddHijo((Nodo)N);
+            padre.AddHijo(new Nodo("FinSi",                 (String)O, Oright, Oleft));
+            RESULT = padre;} 
+    :} 
+|
+    error FinSi
+
+;
+// para las condiciones del condicional Si
+// poner todos los simbolos en lugar de operador relacional 
+CONDICION ::= Identificador:A OperadorRelacional:E Identificador:I
+{:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf(A) +String.valueOf(E) + String.valueOf(I)+ "\n";} 
+                // PARA EL ARBOL
+         if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("CONDICION", "", 0,0);
+            padre.AddHijo(new Nodo("Identificador",            (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("OperadorRelacional",       (String)E, Eright, Eleft));
+            padre.AddHijo(new Nodo("Identificador",             (String)I, Iright, Ileft));
+            RESULT = padre;}
+:}
+|
+    Identificador:A OperadorRelacional:E Numero:I  
+{:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf(A) +String.valueOf(E) + String.valueOf(I)+ "\n";}
+
+        // PARA EL ARBOL
+         if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("CONDICION", "", 0,0);
+            padre.AddHijo(new Nodo("Identificador",            (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("OperadorRelacional",       (String)E, Eright, Eleft));
+            padre.AddHijo(new Nodo("Numero",             (String)I, Iright, Ileft));
+            RESULT = padre;}
+:}
+|
+    Numero:A OperadorRelacional:E Identificador:I  
+{:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf(A) +String.valueOf(E) + String.valueOf(I)+ "\n";}
+
+                // PARA EL ARBOL
+         if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("CONDICION", "", 0,0);
+            padre.AddHijo(new Nodo("Numero",            (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("OperadorRelacional",       (String)E, Eright, Eleft));
+            padre.AddHijo(new Nodo("Identificador",             (String)I, Iright, Ileft));
+            RESULT = padre;}
+:}
+|
+    Numero:A OperadorRelacional:E Numero:I   
+{:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf(A) +String.valueOf(E) + String.valueOf(I)+ "\n";}   
+        
+                // PARA EL ARBOL
+         if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("CONDICION", "", 0,0);
+            padre.AddHijo(new Nodo("Numero",            (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("OperadorRelacional",       (String)E, Eright, Eleft));
+            padre.AddHijo(new Nodo("Numero",             (String)I, Iright, Ileft));
+            RESULT = padre;}
+:}
+|
+    Verdadero:A
+{:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf(A) +"\n";}   
+                // PARA EL ARBOL
+         if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("CONDICION", "", 0,0);
+            padre.AddHijo(new Nodo("Verdadero",   (String)A, Aright, Aleft));
+            RESULT = padre;}
+:}
+| Falso:A 
+{:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf(A)+"\n";}   
+                
+                        // PARA EL ARBOL
+         if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("CONDICION", "", 0,0);
+            padre.AddHijo(new Nodo("Verdadero",   (String)A, Aright, Aleft));
+            RESULT = padre;}
+:} 
+;
+//SELECCION MULTIPLE CASES
+SELECCIONMULTIPLE ::= Segun Numero Hacer InterrogacionA Numero InterrogacionC 
+    Entonces SENTENCIA DeloContrario Entonces SENTENCIA FinSegun |
+    // si son 2 case
+    Segun Numero Hacer InterrogacionA Numero InterrogacionC Entonces SENTENCIA
+    InterrogacionA Numero InterrogacionC Entonces SENTENCIA DeloContrario Entonces SENTENCIA FinSegun |
+    // SI SON 3 CASE
+    Segun Numero Hacer InterrogacionA Numero InterrogacionC Entonces SENTENCIA
+    InterrogacionA Numero InterrogacionC Entonces SENTENCIA
+    InterrogacionA Numero InterrogacionC Entonces SENTENCIA 
+    DeloContrario Entonces SENTENCIA FinSegun | 
+    
+    //SI SON 4 CASE
+    Segun Numero Hacer InterrogacionA Numero InterrogacionC Entonces SENTENCIA
+    InterrogacionA Numero InterrogacionC Entonces SENTENCIA
+    InterrogacionA Numero InterrogacionC Entonces SENTENCIA
+    InterrogacionA Numero InterrogacionC Entonces SENTENCIA 
+    DeloContrario Entonces SENTENCIA FinSegun  |
+
+    // si son 5 case 
+    Segun Numero Hacer InterrogacionA Numero InterrogacionC Entonces SENTENCIA
+    InterrogacionA Numero InterrogacionC Entonces SENTENCIA
+    InterrogacionA Numero InterrogacionC Entonces SENTENCIA
+    InterrogacionA Numero InterrogacionC Entonces SENTENCIA
+    InterrogacionA Numero InterrogacionC Entonces SENTENCIA 
+    DeloContrario Entonces SENTENCIA FinSegun  |
+    
+    // AGREGAR CUANDO EL VALOR ES UNA VARIABLE 
+    Segun Identificador Hacer InterrogacionA Identificador InterrogacionC 
+    Entonces SENTENCIA DeloContrario Entonces SENTENCIA FinSegun |
+
+    // DOS CASE CON VARIABLE 
+    Segun Identificador Hacer InterrogacionA Identificador InterrogacionC 
+    Entonces SENTENCIA 
+    InterrogacionA Identificador InterrogacionC 
+    Entonces SENTENCIA 
+    DeloContrario Entonces SENTENCIA FinSegun |
+
+    // tres case con variable
+    Segun Identificador Hacer InterrogacionA Identificador InterrogacionC 
+    Entonces SENTENCIA 
+    InterrogacionA Identificador InterrogacionC 
+    Entonces SENTENCIA 
+    InterrogacionA Identificador InterrogacionC 
+    Entonces SENTENCIA 
+    DeloContrario Entonces SENTENCIA FinSegun |
+
+    // 4 case variable 
+    Segun Identificador Hacer InterrogacionA Identificador InterrogacionC 
+    Entonces SENTENCIA 
+    InterrogacionA Identificador InterrogacionC 
+    Entonces SENTENCIA 
+    InterrogacionA Identificador InterrogacionC 
+    Entonces SENTENCIA 
+    InterrogacionA Identificador InterrogacionC 
+    Entonces SENTENCIA 
+    DeloContrario Entonces SENTENCIA FinSegun |
+
+    // 5 case variable 
+    Segun Identificador Hacer InterrogacionA Identificador InterrogacionC 
+    Entonces SENTENCIA 
+    InterrogacionA Identificador InterrogacionC 
+    Entonces SENTENCIA 
+    InterrogacionA Identificador InterrogacionC 
+    Entonces SENTENCIA 
+    InterrogacionA Identificador InterrogacionC 
+    Entonces SENTENCIA 
+    InterrogacionA Identificador InterrogacionC 
+    Entonces SENTENCIA 
+    DeloContrario Entonces SENTENCIA FinSegun |
+    error FinSegun
+    
+;
+
+// CICLO PARA cuando tiene valores de variables 
+CICLOPARA ::= Para:F Identificador:B Asignar:G  Identificador:C Hasta:H Identificador:D Hacer:I
+             SENTENCIA:E FinPara:J 
+{:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf("for ") + String.valueOf(B)+ String.valueOf(" in ")+ 
+                String.valueOf(C)+ String.valueOf(": ") + "\n"+ String.valueOf(E)+ "\n";} 
+
+           // PARA EL ARBOL
+        if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("CICLOPARA", "", 0,0);
+            padre.AddHijo(new Nodo("PARA",                  (String)F, Fright, Fleft));
+            padre.AddHijo(new Nodo("Identificador",         (String)B, Bright, Bleft));
+            padre.AddHijo(new Nodo("Asignar",               (String)G, Gright, Gleft));
+            padre.AddHijo(new Nodo("Identificador",         (String)C, Cright, Cleft));
+            padre.AddHijo(new Nodo("Hasta",                 (String)H, Hright, Hleft));
+            padre.AddHijo(new Nodo("Identificador",         (String)D, Dright, Dleft));
+            padre.AddHijo(new Nodo("Hacer",                 (String)I, Iright, Ileft));
+            padre.AddHijo((Nodo)E);
+            padre.AddHijo(new Nodo("FinPara",               (String)J, Jright, Jleft));
+            RESULT = padre;} 
+:}
+|
+        // para cuando el for no trae instrucciones a realizar 
+        Para:F Identificador:B Asignar:G  Identificador:C Hasta:H Identificador:D Hacer:I 
+            FinPara:J 
+{:
+            if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf("for ") + String.valueOf(B)+ String.valueOf(" in ")+ 
+                String.valueOf(C)+ String.valueOf(": ") + "\n"+"//NULL ";} 
+
+            // PARA EL ARBOL
+        if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("CICLOPARA", "", 0,0);
+            padre.AddHijo(new Nodo("PARA",                  (String)F, Fright, Fleft));
+            padre.AddHijo(new Nodo("Identificador",         (String)B, Bright, Bleft));
+            padre.AddHijo(new Nodo("Asignar",               (String)G, Gright, Gleft));
+            padre.AddHijo(new Nodo("Identificador",         (String)C, Cright, Cleft));
+            padre.AddHijo(new Nodo("Hasta",                 (String)H, Hright, Hleft));
+            padre.AddHijo(new Nodo("Identificador",         (String)D, Dright, Dleft));
+            padre.AddHijo(new Nodo("Hacer",                 (String)I, Iright, Ileft));
+            padre.AddHijo(new Nodo("FinPara",               (String)J, Jright, Jleft));
+            RESULT = padre;} 
+:}
+|  
+          
+        // para el ciclo cuando los valores son numeros    
+        Para:A Identificador:B Asignar:H  Numero:C Hasta:D  Numero:F Hacer:G 
+                SENTENCIA:E FinPara:J     
+{:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf("for ") + String.valueOf(B)+ String.valueOf(" in range ")+ 
+                   String.valueOf(C)+String.valueOf(" , ") +String.valueOf(F)+ String.valueOf(": ") +
+                 "\n"+ String.valueOf(E)+ "\n";}   
+
+              // PARA EL ARBOL
+        if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("CICLOPARA", "", 0,0);
+            padre.AddHijo(new Nodo("PARA",                  (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("Identificador",         (String)B, Bright, Bleft));
+            padre.AddHijo(new Nodo("Asignar",               (String)H, Hright, Hleft));
+            padre.AddHijo(new Nodo("Numero",                (String)C, Cright, Cleft));
+            padre.AddHijo(new Nodo("Hasta",                  (String)D, Dright, Dleft));   
+            padre.AddHijo(new Nodo("Numero",                 (String)F, Fright, Fleft));
+            padre.AddHijo(new Nodo("Hacer",                 (String)G, Gright, Gleft));
+            padre.AddHijo((Nodo)E);
+            padre.AddHijo(new Nodo("FinPara",               (String)J, Jright, Jleft));
+            RESULT = padre;}      
+:}
+|   
+        Para:A Identificador:B Asignar:H Numero:C Hasta:D Numero:F ConIncremental:G
+             Numero:X Hacer:I SENTENCIA:J FinPara:K
+{:        
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf("for ") + String.valueOf(B)+ String.valueOf(" in range ")+ 
+                   String.valueOf(C)+String.valueOf(" , ") +String.valueOf(F)+ " ++ " +String.valueOf(X)+" : "+
+                 "\n"+ String.valueOf(J)+ "\n";}   
+
+              // PARA EL ARBOL
+        if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("CICLOPARA", "", 0,0);
+            padre.AddHijo(new Nodo("PARA",                  (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("Identificador",         (String)B, Bright, Bleft));
+            padre.AddHijo(new Nodo("Asignar",               (String)H, Hright, Hleft));
+            padre.AddHijo(new Nodo("Numero",                (String)C, Cright, Cleft));
+            padre.AddHijo(new Nodo("Hasta",                  (String)D, Dright, Dleft));   
+            padre.AddHijo(new Nodo("Numero",                 (String)F, Fright, Fleft));
+            padre.AddHijo(new Nodo("ConIncremental",          (String)G, Gright, Gleft));
+            padre.AddHijo(new Nodo("Numero",                 (String)X, Xright, Xleft));
+            padre.AddHijo(new Nodo("Hacer",                 (String)I, Iright, Ileft));
+            padre.AddHijo((Nodo)J);
+            padre.AddHijo(new Nodo("FinPara",               (String)K, Kright, Kleft));
+            RESULT = padre;}   
+:}
+           | error FinPara
+;
+
+//CICLO MIENTRAS 
+CICLOMIENTRAS ::= 
+   
+    //Ciclo con instrucciones a realizar
+    Mientras:D CONDICION:A Hacer:E  SENTENCIA:B  FinMientras:C 
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT =  String.valueOf("while") + String.valueOf(A)+":"+ String.valueOf(B);} 
+               // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("CICLOMIENTRAS", "", 0,0);
+            padre.AddHijo(new Nodo("Mientras",      (String)D, Dright, Dleft));
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo(new Nodo("Hacer",       (String)E, Eright, Eleft));
+            padre.AddHijo((Nodo)B);          
+            padre.AddHijo(new Nodo("FinMientras",     (String)C, Cright, Cleft));
+            RESULT = padre;}
+:}
+|
+    // para cuando el mientras no tiene instrucciones a realizar
+    Mientras:C CONDICION:A Hacer:D
+         FinMientras:B
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT =  String.valueOf("while")+ String.valueOf(A)+":"+ "\n"+"//NULL ";}
+                // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("CICLOMIENTRAS", "", 0,0);
+            padre.AddHijo(new Nodo("Mientras",      (String)C, Cright, Cleft));
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo(new Nodo("Hacer",       (String)D, Dright, Dleft));
+            padre.AddHijo(new Nodo("FinMientras",     (String)C, Cright, Cleft));
+            RESULT = padre;}
+:}
+|
+         error FinMientras
+;   
+
+// CICLO REPETIR HASTA
+CICLOREPETIR ::=
+    // CICLO CON INSTRUCCIONES 
+
+    Repetir:C SENTENCIA:A  HastaQue:D CONDICION:B 
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT =  String.valueOf("while  ") + String.valueOf(A)+ ":" + String.valueOf(B);}   
+                // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("CICLOREPETIR", "", 0,0);
+            padre.AddHijo(new Nodo("Repetir",      (String)C, Cright, Cleft));
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo(new Nodo("HastaQue",       (String)D, Dright, Dleft));
+            padre.AddHijo((Nodo)B);
+            RESULT = padre;}
+:}
+|
+    // CICLO SIN INSTRUCCIONES 
+    Repetir:C HastaQue:D CONDICION:A 
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT =  String.valueOf("while") +"\n"+ String.valueOf(A)+ ":";} 
+                // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("CICLOREPETIR", "", 0,0);
+            padre.AddHijo(new Nodo("Repetir",      (String)C, Cright, Cleft));
+            padre.AddHijo(new Nodo("HastaQue",       (String)D, Dright, Dleft));
+            padre.AddHijo((Nodo)A);
+            RESULT = padre;}
+:}
+|
+    error CONDICION
+;
+
+// para los metodos
+METODO ::= 
+    // metodo con instrucciones
+    Metodo:C Identificador:A  SENTENCIA:B FinMetodo:D
+{:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT = String.valueOf("def ") + String.valueOf(A)+ "():" + "\n"+String.valueOf(B)+ "\n";}   
+        
+            // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("METODO", "", 0,0);
+            padre.AddHijo(new Nodo("Metodo",      (String)C, Cright, Cleft));
+            padre.AddHijo(new Nodo("Identificador",       (String)A, Aright, Aleft));
+            padre.AddHijo((Nodo)B);
+            padre.AddHijo(new Nodo("FinMetodo",      (String)D, Dright, Dleft));
+            RESULT = padre;}
+
+
+:}
+|
+    // metodo con lista  DE PARAMETROS
+    Metodo:A Identificador:X ConParametros:B ParentesisA:C PARAMETROS:Y ParentesisC:D SENTENCIA:Z
+     FinMetodo:F
+{:
+    if (InicioEstado==1){
+    // Enviando declaracion y sentencia como string 
+    RESULT = String.valueOf("def ") + String.valueOf(X)+"("+ String.valueOf(Y)+")"
+    + "\n"+String.valueOf(Z) ;}   
+     // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("METODO", "", 0,0);
+            padre.AddHijo(new Nodo("Metodo",               (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("Identificador",       (String)X, Xright, Xleft));
+            padre.AddHijo(new Nodo("ConParametros",       (String)B, Bright, Bleft));
+            padre.AddHijo(new Nodo("ParentesisA",       (String)C, Cright, Cleft));
+            padre.AddHijo((Nodo)Y);
+            padre.AddHijo(new Nodo("ParentesisC",       (String)D, Dright, Dleft));
+            padre.AddHijo((Nodo)Z);
+            padre.AddHijo(new Nodo("FinMetodo",      (String)F, Fright, Fleft));
+            RESULT = padre;}
+
+:}
+|
+    error FinMetodo
+;
+
+// PARA LAS FUNCIONES
+FUNCION ::=
+    // funcion normal 
+    Funcion:D Identificador:A Numeroo:B SENTENCIA:C FinFuncion:E
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf("def ")+ String.valueOf(A)+"():" +"   \n"+ String.valueOf(C)+
+            "return" + "\n";}
+   
+             // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("FUNCION", "", 0,0);
+            padre.AddHijo(new Nodo("Funcion",            (String)D, Dright, Dleft));
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("Numeroo",            (String)B, Bright, Bleft));
+            padre.AddHijo((Nodo)C);
+            padre.AddHijo(new Nodo("FinFuncion",         (String)E, Eright, Eleft));
+            RESULT = padre;}
+:}
+
+|
+    Funcion:D Identificador:A TipoCadena:B SENTENCIA:C FinFuncion:E  
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf("def ")+  String.valueOf(A)+"():" +"   \n"+  String.valueOf(C)+
+            "return" + "\n";}   
+            
+             // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("FUNCION", "", 0,0);
+            padre.AddHijo(new Nodo("Funcion",            (String)D, Dright, Dleft));
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("TipoCadena",            (String)B, Bright, Bleft));
+            padre.AddHijo((Nodo)C);
+            padre.AddHijo(new Nodo("FinFuncion",         (String)E, Eright, Eleft));
+            RESULT = padre;}
+:}
+|
+    Funcion:D  Identificador:A Boolean:B SENTENCIA:C  FinFuncion:E    
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf("def ")+  String.valueOf(A)+"():" +"   \n"+  String.valueOf(C)+
+            "return" + "\n";}   
+         // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("FUNCION", "", 0,0);
+            padre.AddHijo(new Nodo("Funcion",            (String)D, Dright, Dleft));
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("Boolean",            (String)B, Bright, Bleft));
+            padre.AddHijo((Nodo)C);
+            padre.AddHijo(new Nodo("FinFuncion",         (String)E, Eright, Eleft));
+            RESULT = padre;}
+:}
+|
+    Funcion:D Identificador:A Car:B SENTENCIA:C  FinFuncion:E 
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf("def ")+  String.valueOf(A)+"():" +"   \n"+  String.valueOf(C)+
+            "return" + "\n";}   
+            // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("FUNCION", "", 0,0);
+            padre.AddHijo(new Nodo("Funcion",            (String)D, Dright, Dleft));
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("Car",            (String)B, Bright, Bleft));
+            padre.AddHijo((Nodo)C);
+            padre.AddHijo(new Nodo("FinFuncion",         (String)E, Eright, Eleft));
+            RESULT = padre;}
+:}
+|
+    
+    Funcion:H Identificador:A Numeroo:B ConParametros:C ParentesisA:D PARAMETROS:E  ParentesisC:F
+      SENTENCIA:G FinFuncion:I
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf("def ")+  String.valueOf(A)+ "(" + String.valueOf(E)+ ")"+
+            "\n"+ "return " +"\n"+  String.valueOf(G) ;}   
+             // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("FUNCION", "", 0,0);
+            padre.AddHijo(new Nodo("Funcion",            (String)H, Hright, Hleft));
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("Numeroo",            (String)B, Bright, Bleft));
+            padre.AddHijo(new Nodo("ConParametros",      (String)C, Cright, Cleft));
+            padre.AddHijo(new Nodo("ParentesisA",         (String)D, Dright, Dleft));
+            padre.AddHijo((Nodo)E);
+            padre.AddHijo(new Nodo("ParentesisC",            (String)F, Fright, Fleft));
+            padre.AddHijo((Nodo)G);
+            padre.AddHijo(new Nodo("FinFuncion",         (String)I, Iright, Ileft));
+            RESULT = padre;}
+:}
+| 
+    Funcion:H Identificador:A Boolean:B ConParametros:C ParentesisA:D PARAMETROS:E  ParentesisC:F
+      SENTENCIA:G FinFuncion:I
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf("def ")+  String.valueOf(A)+ "(" + String.valueOf(E)+ ")"+
+            "\n"+ "return " +"\n"+  String.valueOf(G) ;}   
+             // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("FUNCION", "", 0,0);
+            padre.AddHijo(new Nodo("Funcion",            (String)H, Hright, Hleft));
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("Boolean",            (String)B, Bright, Bleft));
+            padre.AddHijo(new Nodo("ConParametros",      (String)C, Cright, Cleft));
+            padre.AddHijo(new Nodo("ParentesisA",         (String)D, Dright, Dleft));
+            padre.AddHijo((Nodo)E);
+            padre.AddHijo(new Nodo("ParentesisC",            (String)F, Fright, Fleft));
+            padre.AddHijo((Nodo)G);
+            padre.AddHijo(new Nodo("FinFuncion",         (String)I, Iright, Ileft));
+            RESULT = padre;}
+:}
+|
+    Funcion:H Identificador:A Car:B ConParametros:C ParentesisA:D PARAMETROS:E  ParentesisC:F
+      SENTENCIA:G FinFuncion:I
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf("def ")+  String.valueOf(A)+ "(" + String.valueOf(E)+ ")"+
+            "\n"+ "return " +"\n"+  String.valueOf(G) ;}   
+             // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("FUNCION", "", 0,0);
+            padre.AddHijo(new Nodo("Funcion",            (String)H, Hright, Hleft));
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("Caracter",            (String)B, Bright, Bleft));
+            padre.AddHijo(new Nodo("ConParametros",      (String)C, Cright, Cleft));
+            padre.AddHijo(new Nodo("ParentesisA",         (String)D, Dright, Dleft));
+            padre.AddHijo((Nodo)E);
+            padre.AddHijo(new Nodo("ParentesisC",            (String)F, Fright, Fleft));
+            padre.AddHijo((Nodo)G);
+            padre.AddHijo(new Nodo("FinFuncion",         (String)I, Iright, Ileft));
+            RESULT = padre;}
+:}
+|
+        Funcion:H Identificador:A TipoCadena:B ConParametros:C ParentesisA:D PARAMETROS:E  ParentesisC:F
+      SENTENCIA:G FinFuncion:I
+{:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT = String.valueOf("def ")+  String.valueOf(A)+ "(" + String.valueOf(E)+ ")"+
+            "\n"+ "return " +"\n"+  String.valueOf(G) ;}   
+             // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("FUNCION", "", 0,0);
+            padre.AddHijo(new Nodo("Funcion",            (String)H, Hright, Hleft));
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("TipoCadena",            (String)B, Bright, Bleft));
+            padre.AddHijo(new Nodo("ConParametros",      (String)C, Cright, Cleft));
+            padre.AddHijo(new Nodo("ParentesisA",         (String)D, Dright, Dleft));
+            padre.AddHijo((Nodo)E);
+            padre.AddHijo(new Nodo("ParentesisC",            (String)F, Fright, Fleft));
+            padre.AddHijo((Nodo)G);
+            padre.AddHijo(new Nodo("FinFuncion",         (String)I, Iright, Ileft));
+            RESULT = padre;}
+:}
+|
+error FinFuncion
+;
+
+// para los parametros
+// AGREGAR PARAMETROS A METODO Y A FUNCION
+PARAMETROS ::= 
+    Identificador:A Numeroo:B
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf(A) +String.valueOf(B);}  
+        // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("PARAMETROS", "", 0,0);
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("Numeroo",       (String)B, Bright, Bleft));
+            RESULT = padre;}
+                
+    :}
+    |
+    PARAMETROS:A  Coma:D Identificador:B Numeroo:C  
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf(A) +String.valueOf(D)+String.valueOf(B)+String.valueOf(C);}   
+            // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("PARAMETROS", "", 0,0);
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo(new Nodo("COMA",      (String)D, Dright, Dleft));
+            padre.AddHijo(new Nodo("Identificador",      (String)B, Bright, Bleft));
+            padre.AddHijo(new Nodo("Numeroo",       (String)C, Cright, Cleft));
+            RESULT = padre;}
+
+
+    :}
+    |
+    Identificador:A Boolean:B
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf(A) +String.valueOf(B);}  
+        // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("PARAMETROS", "", 0,0);
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("Boolean",       (String)B, Bright, Bleft));
+            RESULT = padre;}
+                
+    :}
+    |
+    PARAMETROS:A  Coma:D Identificador:B Boolean:C 
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf(A) +String.valueOf(D)+String.valueOf(B)+String.valueOf(C);}   
+            // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("PARAMETROS", "", 0,0);
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo(new Nodo("COMA",      (String)D, Dright, Dleft));
+            padre.AddHijo(new Nodo("Identificador",      (String)B, Bright, Bleft));
+            padre.AddHijo(new Nodo("Boolean",       (String)C, Cright, Cleft));
+            RESULT = padre;}
+
+
+    :}
+    |
+    Identificador:A Car:B
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf(A) +String.valueOf(B);}  
+        // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("PARAMETROS", "", 0,0);
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("CARACTER",       (String)B, Bright, Bleft));
+            RESULT = padre;}
+                
+    :}
+    |
+    PARAMETROS:A   Coma:D Identificador:B Car:C  
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf(A) +String.valueOf(D)+String.valueOf(B)+String.valueOf(C);}   
+            // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("PARAMETROS", "", 0,0);
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo(new Nodo("COMA",      (String)D, Dright, Dleft));
+            padre.AddHijo(new Nodo("Identificador",      (String)B, Bright, Bleft));
+            padre.AddHijo(new Nodo("Caracter",       (String)C, Cright, Cleft));
+            RESULT = padre;}
+
+
+    :}
+    |
+    Identificador:A TipoCadena:B
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf(A) +String.valueOf(B);}  
+        // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("PARAMETROS", "", 0,0);
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("CARACTER",       (String)B, Bright, Bleft));
+            RESULT = padre;}
+                
+    :}
+    |
+    PARAMETROS:A   Coma:D Identificador:B TipoCadena:C
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf(A) +String.valueOf(D)+String.valueOf(B)+String.valueOf(C);}   
+            // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("PARAMETROS", "", 0,0);
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo(new Nodo("COMA",      (String)D, Dright, Dleft));
+            padre.AddHijo(new Nodo("Identificador",      (String)B, Bright, Bleft));
+            padre.AddHijo(new Nodo("Caracter",       (String)C, Cright, Cleft));
+            RESULT = padre;}
+
+
+    :}
+
+;
+
+// llamda de funciones y metodos 
+LLAMADAFUNMET ::= 
+    Ejecutar:B Identificador:A ParentesisA:C ParentesisC:D PuntoComa:E 
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT =  String.valueOf(A)+"():" +"\n";} 
+         // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("LLAMADAFUNMET", "", 0,0);
+            padre.AddHijo(new Nodo("Ejecutar",       (String)B, Bright, Bleft));
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("ParentesisA",      (String)C, Cright, Cleft));
+            padre.AddHijo(new Nodo("ParentesisC",      (String)D, Dright, Dleft));
+            padre.AddHijo(new Nodo("PuntoComa",      (String)E, Eright, Eleft));
+            RESULT = padre;}
+    :}
+    |
+    Ejecutar Identificador  PARAMETROS ParentesisC PuntoComa |
+    // METODO CON EXPRESIONC--
+    Ejecutar:C Identificador:A ParentesisA:D ARITMETICA:B ParentesisC:E  PuntoComa:F 
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT =  String.valueOf(A)+"(" +String.valueOf(B)+ ")";}  
+            // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("LLAMADAFUNMET", "", 0,0);
+            padre.AddHijo(new Nodo("Ejecutar",      (String)C, Cright,Cleft));
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright, Aleft));
+            padre.AddHijo(new Nodo("ParentesisA",      (String)D, Dright, Dleft));
+            padre.AddHijo((Nodo)B);
+            padre.AddHijo(new Nodo("ParentesisC",      (String)C, Cright, Cleft));           
+            padre.AddHijo(new Nodo("PuntoComa",       (String)F, Fright, Fleft));
+            RESULT = padre;}
+    :}
+;
+
+IMPRESION ::= 
+    // impresion sin salto 
+    Imprimir:B  Identificador:A  PuntoComa:C  
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT = "print(" + String.valueOf(A) + ")" +"\n";} 
+
+            // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("IMPRESION", "", 0,0);
+            padre.AddHijo(new Nodo("Imprimir",      (String)B, Bright,Bleft));
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright,Aleft));
+            padre.AddHijo(new Nodo("PuntoComa",      (String)C, Cright,Cleft));
+            RESULT = padre;}
+    :}
+    |
+    Imprimir:B   Cadena:A  PuntoComa:C  
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT = "print(" + String.valueOf(A) + ")" +"\n";}
+                // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("IMPRESION", "", 0,0);
+            padre.AddHijo(new Nodo("Imprimir",      (String)B, Bright,Bleft));
+            padre.AddHijo(new Nodo("Cadena",      (String)A, Aright,Aleft));
+            padre.AddHijo(new Nodo("PuntoComa",      (String)C, Cright,Cleft));
+            RESULT = padre;}
+    :}
+    |
+    ImprimirSalto:B   Cadena:A  PuntoComa:C  
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT = "print_nl(" + String.valueOf(A) + ")" +"\n";}
+                // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("IMPRESION", "", 0,0);
+            padre.AddHijo(new Nodo("ImprimirSalto",      (String)B, Bright,Bleft));
+            padre.AddHijo(new Nodo("Cadena",      (String)A, Aright,Aleft));
+            padre.AddHijo(new Nodo("PuntoComa",      (String)C, Cright,Cleft));
+            RESULT = padre;}
+    :}
+    |
+    ImprimirSalto:B    Identificador:A  PuntoComa:C   
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT = "print(" + String.valueOf(A) + ")" +"\n";}   
+                // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("IMPRESION", "", 0,0);
+            padre.AddHijo(new Nodo("ImprimirSalto",      (String)B, Bright,Bleft));
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright,Aleft));
+            padre.AddHijo(new Nodo("PuntoComa",      (String)C, Cright,Cleft));
+            RESULT = padre;}
+    :}
+    |
+    // impresion con salto 
+    ImprimirSalto:D ParentesisA:A  Identificador:B  ParentesisC:C PuntoComa:E
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT = "print(" + String.valueOf(B) + ")" +"\n";} 
+                  // para el arbol
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("IMPRESION", "", 0,0);
+            padre.AddHijo(new Nodo("ImprimirSalto",      (String)D, Dright,Dleft));
+            padre.AddHijo(new Nodo("ParentesisA",      (String)A, Aright,Aleft));
+            padre.AddHijo(new Nodo("Identificador",      (String)B, Bright, Bleft));
+            padre.AddHijo(new Nodo("ParentesisC",      (String)C, Cright,Cleft));
+            padre.AddHijo(new Nodo("PuntoComa",      (String)E, Eright,Eleft));
+            RESULT = padre;}
+    :}
+    |
+    // impresion con salto 
+    ImprimirSalto:D ParentesisA:A Cadena:B  ParentesisC:C PuntoComa:E
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT = "print(" + String.valueOf(B) + ")" +"\n";} 
+                if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("IMPRESION", "", 0,0);
+            padre.AddHijo(new Nodo("ImprimirSalto",      (String)D, Dright,Dleft));
+            padre.AddHijo(new Nodo("ParentesisA",      (String)A, Aright,Aleft));
+            padre.AddHijo(new Nodo("Cadena",      (String)B, Bright, Bleft));
+            padre.AddHijo(new Nodo("ParentesisC",      (String)C, Cright,Cleft));
+            padre.AddHijo(new Nodo("PuntoComa",      (String)E, Eright,Eleft));
+            RESULT = padre;}
+    :}
+    |
+    // impresion con salto 
+    Imprimir:D Identificador:A ParentesisA:C ARITMETICA:B  ParentesisC:E PuntoComa:F
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT = "print " + String.valueOf(A) + " " +"("+String.valueOf(B) +")"+"\n";} 
+                // PARA EL ARBOL
+                    if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("IMPRESION", "", 0,0);
+            padre.AddHijo(new Nodo("Imprimir",      (String)D, Dright,Dleft));
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright,Aleft));
+            padre.AddHijo(new Nodo("ParentesisA",     (String)C, Cright,Cleft));
+            padre.AddHijo((Nodo)B);
+            padre.AddHijo(new Nodo("ParentesisC",      (String)E, Eright,Eleft));
+            padre.AddHijo(new Nodo("PuntoComa",      (String)F, Fright,Fleft));
+            RESULT = padre;}
+    :}
+;
+
+RETORAR ::=
+    Retornar:B Identificador:A PuntoComa:C
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT = "return " + String.valueOf(A) +";"+"\n";} 
+                // PARA EL ARBOL
+                    if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("RETORAR", "", 0,0);
+            padre.AddHijo(new Nodo("Retornar",      (String)B, Bright,Bleft));
+            padre.AddHijo(new Nodo("Identificador",      (String)A, Aright,Aleft));
+            padre.AddHijo(new Nodo("PuntoComa",     (String)C, Cright,Cleft));
+            RESULT = padre;}
+                
+    :}
+    | 
+        Retornar:B ParentesisA:D ARITMETICA:A ParentesisC:E PuntoComa:C 
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT = "return " +"("+ String.valueOf(A)+")"+";" +"\n";}  
+                    // PARA EL ARBOL
+                    if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("RETORAR", "", 0,0);
+            padre.AddHijo(new Nodo("Retornar",      (String)B, Bright,Bleft));
+            padre.AddHijo(new Nodo("ParentesisA",      (String)D, Dright,Dleft));
+             padre.AddHijo((Nodo)A);
+            padre.AddHijo(new Nodo("ParentesisC",      (String)E, Eright,Eleft));
+            padre.AddHijo(new Nodo("PuntoComa",     (String)C, Cright,Cleft));
+            RESULT = padre;}
+                
+    :}
+    | 
+        Retornar:B  CONDICION:A  PuntoComa:C 
+    {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT = "return " +"("+ String.valueOf(A)+")"+";";}  
+                      // PARA EL ARBOL
+                    if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("RETORAR", "", 0,0);
+            padre.AddHijo(new Nodo("Retornar",      (String)B, Bright,Bleft));
+            padre.AddHijo((Nodo)A);
+            padre.AddHijo(new Nodo("PuntoComa",     (String)C, Cright,Cleft));
+            RESULT = padre;}
+    :}
+;
+
+// PARA LAS EXPRESIONES ARTMETICAS
+// no jala aritmeticas con coma 
+ARITMETICA ::=
+    Numero:X 
+    {:
+    if (InicioEstado==1){
+            // Enviando declaracion y sentencia como string 
+            RESULT =  String.valueOf(X);}  
+               // PARA EL ARBOL
+            if (InicioEstado==2){
+            // RAIZ
+            Nodo padre = new Nodo("ARITMETICA", "", 0,0);
+            padre.AddHijo(new Nodo("Numero",      (String)X, Xright,Xleft));
+            RESULT = padre;}
+            
+    :}
+    | 
+        ARITMETICA:A Suma:C Numero:B
+        {:
+        if (InicioEstado==1){
+                // Enviando declaracion y sentencia como string 
+                RESULT =  String.valueOf(A) + "+"+ String.valueOf(B);}   
+                 // para el arbol
+            if (InicioEstado==2){
+                // RAIZ
+                Nodo padre = new Nodo("ARITMETICA", "", 0,0);
+                  padre.AddHijo((Nodo)A);
+                padre.AddHijo(new Nodo("Suma",      (String)C, Cright , Cleft));
+                padre.AddHijo(new Nodo("Numero",      (String)B, Bright , Bleft));
+                RESULT = padre;}
+        :}
+        | 
+            ARITMETICA:X Resta:Z Numero:Y 
+            {:
+            if (InicioEstado==1){
+                    // Enviando declaracion y sentencia como string 
+                    RESULT =  String.valueOf(X) + "-"+ String.valueOf(Y);}
+            if (InicioEstado==2){
+                // RAIZ
+                Nodo padre = new Nodo("ARITMETICA", "", 0,0);
+                padre.AddHijo((Nodo)X);
+                padre.AddHijo(new Nodo("Resta",      (String)Z, Zright , Zleft));
+                padre.AddHijo(new Nodo("Numero",      (String)Y, Yright , Yleft));
+                RESULT = padre;}
+            :}    
+            | 
+                ARITMETICA:A Multiplicacion:I Numero:E 
+                {:
+                if (InicioEstado==1){
+                    // Enviando declaracion y sentencia como string 
+                    RESULT =  String.valueOf(A) + "*"+ String.valueOf(E);} 
+                    if (InicioEstado==2){
+                        // RAIZ
+                        Nodo padre = new Nodo("ARITMETICA", "", 0,0);
+                        padre.AddHijo((Nodo)A);
+                        padre.AddHijo(new Nodo("Multiplicacion",      (String)I, Iright , Ileft));
+                        padre.AddHijo(new Nodo("Numero",      (String)E, Eright , Eleft));
+                        RESULT = padre;}
+                :}    
+                |
+                    ARITMETICA:X Division:Y Numero:Z 
+                    {:
+                    if (InicioEstado==1){
+                        // Enviando declaracion y sentencia como string 
+                        RESULT =  String.valueOf(X) + "/"+ String.valueOf(Z);} 
+                        if (InicioEstado==2){
+                            // RAIZ
+                            Nodo padre = new Nodo("ARITMETICA", "", 0,0);
+                            padre.AddHijo((Nodo)X);
+                            padre.AddHijo(new Nodo("Division",      (String)Y, Yright , Yleft));
+                            padre.AddHijo(new Nodo("Numero",      (String)Z, Zright , Zleft));
+                            RESULT = padre;}
+                    :}   
+                    |
+                    ParentesisA:B  ARITMETICA:A ParentesisC:C {:
+                    if (InicioEstado==1){
+                        // Enviando declaracion y sentencia como string 
+                        RESULT =  String.valueOf(A);}   
+                        if (InicioEstado==2){
+                        // RAIZ
+                        Nodo padre = new Nodo("ARITMETICA", "", 0,0);
+                        padre.AddHijo(new Nodo("ParentesisA",      (String)B , Bright , Bleft));
+                        padre.AddHijo((Nodo)A);
+                        padre.AddHijo(new Nodo("ParentesisC",      (String)C, Cright , Cleft));
+                        RESULT = padre;}
+                    :}   
+| error ParentesisC
+
+;
+
+
